@@ -6,7 +6,7 @@ export default defineConfig({
   schema: path.join('prisma', 'schema.prisma'),
   migrations: {
     path: 'prisma/migrations',
-    seed: 'tsx prisma/seed.ts',
+    seed: 'npm run seed',
   },
   datasource: {
     // Use process.env here so `prisma generate` doesn't fail when DATABASE_URL isn't set

@@ -1,12 +1,16 @@
+import bcrypt from 'bcrypt'
 import prisma from '../src/lib/prisma'
 
 async function main() {
+  const plainPassword = 'demo'
+  const hash = await bcrypt.hash(plainPassword, 10)
+
   const user = await prisma.user.upsert({
     where: { email: 'demo@example.com' },
     update: {},
     create: {
       email: 'demo@example.com',
-      password: '$2b$10$demo', // replace with bcrypt hash in real seed
+      password: String(hash),
       name: 'Demo User'
     }
   })
@@ -17,6 +21,8 @@ async function main() {
       { title: 'Second task', description: 'Example task', userId: user.id }
     ]
   })
+
+  console.log('Seeded demo user: demo@example.com / demo')
 }
 
 main()
