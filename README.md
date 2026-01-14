@@ -27,8 +27,6 @@ Docker (development)
 - docker-compose up --build
 
 Roadmap / TODOs
-- Implement JWT auth, user and task CRUD
-- Add Prisma schema, migrations and seed scripts
 - Dockerize backend and frontend
 - Add GitHub Actions CI workflow
 
