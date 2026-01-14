@@ -8,7 +8,7 @@ export const Card = ({
   children: React.ReactNode;
   className?: string;
 }) => {
-  return <div className={cn('rounded-md border bg-card p-6', className)}>{children}</div>;
+  return <div className={cn('rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 shadow-sm', className)}>{children}</div>;
 };
 
 export const CardTitle = ({
@@ -17,7 +17,7 @@ export const CardTitle = ({
 }: {
   children: React.ReactNode;
   className?: string;
-}) => <h3 className={cn('text-lg font-semibold', className)}>{children}</h3>;
+}) => <h3 className={cn('text-lg font-semibold text-gray-900 dark:text-white', className)}>{children}</h3>;
 
 export const CardDescription = ({
   children,
@@ -25,4 +25,4 @@ export const CardDescription = ({
 }: {
   children: React.ReactNode;
   className?: string;
-}) => <p className={cn('text-sm text-muted-foreground', className)}>{children}</p>;
+}) => <p className={cn('text-sm text-gray-600 dark:text-gray-400', className)}>{children}</p>;

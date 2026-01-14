@@ -65,9 +65,10 @@ export function sortTasks(tasks: Task[], sortType: TaskSortType): Task[] {
   const sorted = [...tasks];
 
   switch (sortType) {
-    case 'priority':
+    case 'priority': {
       const priorityOrder = { high: 0, medium: 1, low: 2 };
       return sorted.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+    }
 
     case 'due-date':
       return sorted.sort((a, b) => {

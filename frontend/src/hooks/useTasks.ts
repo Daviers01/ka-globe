@@ -1,7 +1,3 @@
-/**
- * Custom hook for managing tasks
- */
-
 import { useState, useEffect } from 'react';
 import type { Task, TaskInput } from '@/types';
 import { taskService } from '@/services/taskService';
@@ -24,7 +20,6 @@ export function useTasks() {
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch tasks';
       setError(errorMessage);
-      console.error('Failed to fetch tasks', err);
     } finally {
       setLoading(false);
     }

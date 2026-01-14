@@ -25,7 +25,7 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in">
       <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-sm"
         onClick={onClose}
         role="button"
         tabIndex={0}
@@ -34,7 +34,7 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
       />
       <div
         className={cn(
-          'relative z-10 w-full max-w-md rounded-lg bg-white p-6 shadow-xl',
+          'relative z-10 w-full max-w-md rounded-lg bg-white dark:bg-gray-800 p-6 shadow-xl border border-gray-200 dark:border-gray-700',
           'animate-in slide-in-from-bottom-4 duration-300',
         )}
         role="dialog"
@@ -43,13 +43,13 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
       >
         <div className="flex items-center justify-between mb-4">
           {title && (
-            <h3 id="modal-title" className="text-lg font-semibold text-gray-900">
+            <h3 id="modal-title" className="text-lg font-semibold text-gray-900 dark:text-white">
               {title}
             </h3>
           )}
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors"
             aria-label="Close modal"
           >
             <span className="text-xl">×</span>

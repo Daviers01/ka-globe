@@ -1,9 +1,6 @@
-/**
- * Task list container component
- */
-
 import React from 'react';
 import { TaskItem } from '@/components/tasks/TaskItem';
+import { TaskItemSkeleton } from '@/components/ui/skeleton';
 import type { Task, TaskInput } from '@/types';
 
 interface TaskListProps {
@@ -22,13 +19,19 @@ export const TaskList: React.FC<TaskListProps> = ({
   isLoading = false,
 }) => {
   if (isLoading) {
-    return <div className="text-center py-8 text-gray-500">Loading tasks...</div>;
+    return (
+      <div className="space-y-3">
+        {[1, 2, 3, 4, 5].map((i) => (
+          <TaskItemSkeleton key={i} />
+        ))}
+      </div>
+    );
   }
 
   if (tasks.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500 text-lg">No tasks yet. Create one to get started!</p>
+        <p className="text-gray-500 dark:text-gray-400 text-lg">No tasks yet. Create one to get started!</p>
       </div>
     );
   }

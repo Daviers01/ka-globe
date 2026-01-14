@@ -4,14 +4,16 @@
 
 import React, { useMemo } from 'react';
 import { Card } from '@/components/ui/card';
+import { SummaryCardSkeleton } from '@/components/ui/skeleton';
 import type { Task, TaskSummary } from '@/types';
 
 interface StatisticsDashboardProps {
   tasks: Task[];
   summary: TaskSummary;
+  isLoading?: boolean;
 }
 
-export const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({ tasks, summary }) => {
+export const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({ tasks, summary, isLoading = false }) => {
   const stats = useMemo(() => {
     const completionRate = summary.total > 0 ? Math.round((summary.completed / summary.total) * 100) : 0;
     
@@ -24,7 +26,6 @@ export const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({ tasks,
     const mediumCompleted = mediumPriorityTasks.filter(t => t.completed).length;
     const lowCompleted = lowPriorityTasks.filter(t => t.completed).length;
 
-    console.log(tasks.length)
     return {
       completionRate,
       highCompletionRate: highPriorityTasks.length > 0 ? Math.round((highCompleted / highPriorityTasks.length) * 100) : 0,
@@ -34,6 +35,26 @@ export const StatisticsDashboard: React.FC<StatisticsDashboardProps> = ({ tasks,
       overduePct: summary.total > 0 ? Math.round((summary.overdue / summary.total) * 100) : 0,
     };
   }, [tasks, summary]);
+
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Statistics</h2>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <SummaryCardSkeleton key={i} />
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {[1, 2].map((i) => (
+            <SummaryCardSkeleton key={i} />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   const StatCard: React.FC<{ label: string; value: string | number; subtext?: string; bgColor: string }> = ({
     label,

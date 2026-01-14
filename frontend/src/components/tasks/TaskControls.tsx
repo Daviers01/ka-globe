@@ -51,7 +51,7 @@ export const TaskControls: React.FC<TaskControlsProps> = ({
       <select
         value={filterType}
         onChange={(e) => onFilterChange(e.target.value as TaskFilterType)}
-        className="px-3 py-2 text-sm font-medium bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all hover:border-gray-400 cursor-pointer"
+        className="px-3 py-2 text-sm font-medium bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all hover:border-gray-400 dark:hover:border-gray-500 cursor-pointer"
       >
         {filterOptions.map((option) => (
           <option key={option.value} value={option.value}>
@@ -64,7 +64,7 @@ export const TaskControls: React.FC<TaskControlsProps> = ({
       <select
         value={priorityFilter}
         onChange={(e) => onPriorityChange(e.target.value as Priority | 'all')}
-        className="px-3 py-2 text-sm font-medium bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all hover:border-gray-400 cursor-pointer"
+        className="px-3 py-2 text-sm font-medium bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all hover:border-gray-400 dark:hover:border-gray-500 cursor-pointer"
       >
         {priorityOptions.map((option) => (
           <option key={option.value} value={option.value}>
@@ -77,7 +77,7 @@ export const TaskControls: React.FC<TaskControlsProps> = ({
       <select
         value={sortType}
         onChange={(e) => onSortChange(e.target.value as TaskSortType)}
-        className="px-3 py-2 text-sm font-medium bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all hover:border-gray-400 cursor-pointer"
+        className="px-3 py-2 text-sm font-medium bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all hover:border-gray-400 dark:hover:border-gray-500 cursor-pointer"
       >
         {sortOptions.map((option) => (
           <option key={option.value} value={option.value}>

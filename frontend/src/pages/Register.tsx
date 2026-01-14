@@ -34,7 +34,6 @@ export default function Register() {
       const token = res.data?.token;
       if (token) login(token);
     } catch (e: unknown) {
-      console.error(e);
       const message = e instanceof Error ? e.message : 'Register failed';
       setServerError(message);
     }
