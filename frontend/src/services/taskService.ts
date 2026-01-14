@@ -46,6 +46,11 @@ export const taskService = {
         today.setHours(0, 0, 0, 0);
         return due < today;
       }).length,
+      byPriority: {
+        high: tasks.filter((t) => t.priority === 'high').length,
+        medium: tasks.filter((t) => t.priority === 'medium').length,
+        low: tasks.filter((t) => t.priority === 'low').length,
+      },
     };
   },
 };

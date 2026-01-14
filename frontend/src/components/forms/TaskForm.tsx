@@ -17,6 +17,8 @@ const taskSchema = z.object({
   description: z.string().optional().default(''),
   dueDate: z.string().optional().default(''),
   completed: z.boolean().optional().default(false),
+  priority: z.enum(['low', 'medium', 'high']).optional().default('medium'),
+  tags: z.string().optional().default(''),
 });
 
 type TaskFormData = z.infer<typeof taskSchema>;
@@ -41,15 +43,22 @@ export const TaskForm: React.FC<TaskFormProps> = ({
       description: initialTask?.description || '',
       dueDate: getDateInputValue(initialTask?.dueDate),
       completed: initialTask?.completed || false,
+      priority: initialTask?.priority || 'medium',
+      tags: initialTask?.tags?.join(', ') || '',
     },
   });
 
   const onFormSubmit = handleSubmit(async (data) => {
+    const tags = data.tags
+      ? data.tags.split(',').map(t => t.trim()).filter(Boolean)
+      : [];
     await onSubmit({
       title: data.title,
       description: data.description || undefined,
       dueDate: data.dueDate || undefined,
       completed: data.completed,
+      priority: data.priority,
+      tags,
     });
   });
 
@@ -82,6 +91,30 @@ export const TaskForm: React.FC<TaskFormProps> = ({
       <div>
         <Label htmlFor="dueDate">Due Date (optional)</Label>
         <Input id="dueDate" type="date" {...register('dueDate')} disabled={isLoading} />
+      </div>
+
+      <div>
+        <Label htmlFor="priority">Priority</Label>
+        <select
+          id="priority"
+          {...register('priority')}
+          disabled={isLoading}
+          className="w-full px-3 py-2 text-sm bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+      </div>
+
+      <div>
+        <Label htmlFor="tags">Tags (comma-separated)</Label>
+        <Input
+          id="tags"
+          placeholder="work, urgent, personal"
+          {...register('tags')}
+          disabled={isLoading}
+        />
       </div>
 
       <div className="flex items-center gap-2">

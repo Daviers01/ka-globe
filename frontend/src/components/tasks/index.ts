@@ -7,3 +7,6 @@ export { TaskList } from '@/components/tasks/TaskList';
 export { TaskSummary } from '@/components/tasks/TaskSummary';
 export { TaskControls } from '@/components/tasks/TaskControls';
 export { TaskKanban } from '@/components/tasks/TaskKanban';
+export { TaskSearch } from '@/components/tasks/TaskSearch';
+export { BulkActions } from '@/components/tasks/BulkActions';
+export { StatisticsDashboard } from '@/components/tasks/StatisticsDashboard';

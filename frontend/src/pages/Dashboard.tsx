@@ -1,14 +1,14 @@
 import React, { useState, useMemo } from 'react';
-import { List, LayoutGrid } from 'lucide-react';
+import { List, LayoutGrid, ChevronDown, ChevronUp } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { Button } from '@/components/ui/button';
 import Modal from '@/components/ui/modal';
-import { TaskList, TaskSummary, TaskControls, TaskKanban } from '@/components/tasks';
+import { TaskList, TaskSummary, TaskControls, TaskKanban, TaskSearch, StatisticsDashboard } from '@/components/tasks';
 import { TaskForm } from '@/components/forms/TaskForm';
 import { useTasks } from '@/hooks/useTasks';
 import { taskService } from '@/services/taskService';
 import { filterAndSortTasks } from '@/utils/taskFilters';
-import type { TaskInput } from '@/types';
+import type { TaskInput, Priority } from '@/types';
 import type { TaskFilterType, TaskSortType } from '@/utils/taskFilters';
 
 type ViewType = 'list' | 'kanban';
@@ -21,10 +21,13 @@ export default function Dashboard() {
   const [sortType, setSortType] = useState<TaskSortType>('created-recent');
   const [viewType, setViewType] = useState<ViewType>('list');
   const [deletingTaskId, setDeletingTaskId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [priorityFilter, setPriorityFilter] = useState<Priority | 'all'>('all');
+  const [showStats, setShowStats] = useState(false);
 
   const filteredAndSortedTasks = useMemo(
-    () => filterAndSortTasks(tasks, filterType, sortType),
-    [tasks, filterType, sortType],
+    () => filterAndSortTasks(tasks, filterType, sortType, searchQuery, priorityFilter),
+    [tasks, filterType, sortType, searchQuery, priorityFilter],
   );
 
   const summary = taskService.calculateSummary(tasks);
@@ -85,7 +88,7 @@ export default function Dashboard() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold">Tasks</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Tasks</h1>
         <div className="flex gap-2">
           <Button onClick={() => setIsCreating(true)} className="gap-2">
             + New Task
@@ -94,7 +97,7 @@ export default function Dashboard() {
       </div>
 
       {error && (
-        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded text-red-700">{error}</div>
+        <div className="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded text-red-700 dark:text-red-400">{error}</div>
       )}
 
       <TaskSummary summary={summary} />
@@ -126,12 +129,17 @@ export default function Dashboard() {
         </div>
 
         {viewType === 'list' && (
-          <TaskControls
-            filterType={filterType}
-            sortType={sortType}
-            onFilterChange={setFilterType}
-            onSortChange={setSortType}
-          />
+          <div className="flex gap-3 items-center">
+            <TaskSearch value={searchQuery} onChange={setSearchQuery} />
+            <TaskControls
+              filterType={filterType}
+              sortType={sortType}
+              priorityFilter={priorityFilter}
+              onFilterChange={setFilterType}
+              onSortChange={setSortType}
+              onPriorityChange={setPriorityFilter}
+            />
+          </div>
         )}
       </div>
 
@@ -169,6 +177,17 @@ export default function Dashboard() {
         )}
         <TaskForm onSubmit={handleCreateTask} onCancel={() => setIsCreating(false)} />
       </Modal>
+      {/* Statistics Section */}
+      <div className="mt-8 border-t pt-8">
+        <button
+          onClick={() => setShowStats(!showStats)}
+          className="flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-white mb-4 hover:text-blue-600 dark:hover:text-blue-400"
+        >
+          {showStats ? <ChevronUp size={24} /> : <ChevronDown size={24} />}
+          {showStats ? 'Hide Statistics' : 'Show Statistics'}
+        </button>
+        {showStats && <StatisticsDashboard tasks={tasks} summary={summary} />}
+      </div>
 
       <Modal
         open={!!deletingTaskId}

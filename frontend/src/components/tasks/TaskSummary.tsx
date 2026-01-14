@@ -34,11 +34,23 @@ const SummaryCard: React.FC<SummaryCardProps> = ({ label, value, variant = 'defa
 
 export const TaskSummary: React.FC<TaskSummaryProps> = ({ summary }) => {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+    <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 mb-6">
       <SummaryCard label="Total" value={summary.total} variant="default" />
       <SummaryCard label="Completed" value={summary.completed} variant="success" />
       <SummaryCard label="Pending" value={summary.pending} variant="warning" />
       <SummaryCard label="Overdue" value={summary.overdue} variant="error" />
+      <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 flex flex-col items-center">
+        <div className="text-sm font-medium text-gray-600">High Priority</div>
+        <div className="text-2xl font-bold mt-2 text-purple-600">{summary.byPriority.high}</div>
+      </div>
+      <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 flex flex-col items-center">
+        <div className="text-sm font-medium text-gray-600">Medium Priority</div>
+        <div className="text-2xl font-bold mt-2 text-orange-600">{summary.byPriority.medium}</div>
+      </div>
+      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex flex-col items-center">
+        <div className="text-sm font-medium text-gray-600">Low Priority</div>
+        <div className="text-2xl font-bold mt-2 text-gray-600">{summary.byPriority.low}</div>
+      </div>
     </div>
   );
 };

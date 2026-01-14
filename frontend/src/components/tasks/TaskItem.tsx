@@ -82,6 +82,33 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, onEdit, onDelete, onTo
                   )}
                 </div>
               )}
+
+              {/* Priority Badge */}
+              <div className="mt-2 flex items-center gap-2">
+                <span className={`px-2 py-1 rounded text-xs font-medium ${
+                  task.priority === 'high' ? 'bg-red-100 text-red-700' :
+                  task.priority === 'medium' ? 'bg-orange-100 text-orange-700' :
+                  'bg-blue-100 text-blue-700'
+                }`}>
+                  {task.priority === 'high' ? '🔴 High' :
+                   task.priority === 'medium' ? '🟠 Medium' :
+                   '🔵 Low'}
+                </span>
+
+                {/* Tags */}
+                {task?.tags?.length > 0 && (
+                  <div className="flex gap-1 flex-wrap">
+                    {task?.tags?.map((tag) => (
+                      <span
+                        key={tag}
+                        className="px-2 py-1 bg-gray-200 text-gray-700 rounded text-xs"
+                      >
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
             </>
           )}
         </div>

@@ -4,7 +4,9 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useTheme } from '@/context/ThemeContext';
 
 interface NavBarProps {
   isAuthenticated: boolean;
@@ -12,6 +14,7 @@ interface NavBarProps {
 }
 
 export const NavBar: React.FC<NavBarProps> = ({ isAuthenticated, onLogout }) => {
+  const { isDarkMode, toggleDarkMode } = useTheme();
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-white backdrop-blur supports-[backdrop-filter]:bg-white/80 shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -32,11 +35,19 @@ export const NavBar: React.FC<NavBarProps> = ({ isAuthenticated, onLogout }) => 
             {isAuthenticated && (
               <Link
                 to="/tasks"
-                className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+                className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all dark:text-gray-300 dark:hover:bg-blue-900"
               >
                 Tasks
               </Link>
             )}
+
+            <button
+              onClick={toggleDarkMode}
+              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              aria-label="Toggle dark mode"
+            >
+              {isDarkMode ? <Sun size={20} className="text-yellow-500" /> : <Moon size={20} className="text-gray-600" />}
+            </button>
 
             <div className="flex gap-2">
               {!isAuthenticated ? (
