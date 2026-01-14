@@ -1,200 +1,109 @@
-import React, { useEffect, useState } from 'react'
-import api from '@/lib/api'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { Label } from '@/components/ui/label'
-import { Card } from '@/components/ui/card'
-import Modal from '@/components/ui/modal'
-
-const schema = z.object({
-  title: z.string().min(1, 'Title required'),
-  description: z.string().optional(),
-  dueDate: z.string().optional(),
-})
-
-type Task = {
-  id: string
-  title: string
-  description?: string | null
-  completed: boolean
-  dueDate?: string | null
-}
-
-type FormData = z.infer<typeof schema>
+import React, { useState, useMemo } from 'react';
+import { Button } from '@/components/ui/button';
+import Modal from '@/components/ui/modal';
+import { TaskList, TaskSummary, TaskControls } from '@/components/tasks';
+import { TaskForm } from '@/components/forms/TaskForm';
+import { useTasks } from '@/hooks/useTasks';
+import { taskService } from '@/services/taskService';
+import { filterAndSortTasks } from '@/utils/taskFilters';
+import type { TaskInput } from '@/types';
+import type { TaskFilterType, TaskSortType } from '@/utils/taskFilters';
 
 export default function Dashboard() {
-  const [tasks, setTasks] = useState<Task[]>([])
-  const [editingId, setEditingId] = useState<string | null>(null)
-  const [creating, setCreating] = useState<boolean>(false)
-  const { register, handleSubmit, reset, formState } = useForm<FormData>({ resolver: zodResolver(schema) })
+  const { tasks, loading, error, createTask, updateTask, deleteTask } = useTasks();
+  const [isCreating, setIsCreating] = useState(false);
+  const [createError, setCreateError] = useState<string | null>(null);
+  const [filterType, setFilterType] = useState<TaskFilterType>('all');
+  const [sortType, setSortType] = useState<TaskSortType>('created-recent');
 
-  useEffect(() => {
-    fetchTasks()
-  }, [])
+  const filteredAndSortedTasks = useMemo(
+    () => filterAndSortTasks(tasks, filterType, sortType),
+    [tasks, filterType, sortType]
+  );
 
-  async function fetchTasks() {
+  const summary = taskService.calculateSummary(tasks);
+
+  const handleCreateTask = async (data: TaskInput) => {
+    setCreateError(null);
     try {
-      const res = await api.get('/api/tasks')
-      setTasks(res.data)
-    } catch (e: any) {
-      console.error('Failed to fetch tasks', e)
+      await createTask(data);
+      setIsCreating(false);
+    } catch (err: any) {
+      setCreateError(err.message || 'Failed to create task');
     }
-  }
+  };
 
-  async function onSubmit(data: FormData) {
+  const handleUpdateTask = async (id: string, data: TaskInput) => {
     try {
-      const res = await api.post('/api/tasks', data)
-      setTasks((s) => [res.data, ...s])
-      reset()
-      setCreating(false)
-    } catch (e: any) {
-      alert(e?.response?.data?.error || 'Failed to create task')
+      await updateTask(id, data);
+    } catch (err) {
+      console.error('Failed to update task', err);
     }
-  }
+  };
 
-  async function onDelete(id: string) {
-    if (!confirm('Delete this task?')) return
+  const handleDeleteTask = async (id: string) => {
     try {
-      await api.delete(`/api/tasks/${id}`)
-      setTasks((s) => s.filter((t) => t.id !== id))
-    } catch (e) {
-      alert('Failed to delete')
+      await deleteTask(id);
+    } catch (err) {
+      console.error('Failed to delete task', err);
     }
-  }
+  };
 
-  async function onToggleComplete(task: Task) {
+  const handleToggleComplete = async (task) => {
     try {
-      const res = await api.put(`/api/tasks/${task.id}`, { title: task.title, description: task.description, dueDate: task.dueDate, completed: !task.completed })
-      setTasks((s) => s.map((t) => (t.id === task.id ? res.data : t)))
-    } catch (e) {
-      alert('Failed to update')
+      await updateTask(task.id, { completed: !task.completed });
+    } catch (err) {
+      console.error('Failed to toggle task', err);
     }
-  }
-
-  async function startEdit(task: Task) {
-    setEditingId(task.id)
-  }
-
-  async function cancelEdit() {
-    setEditingId(null)
-  }
-
-  async function submitEdit(id: string, values: FormData) {
-    try {
-      const res = await api.put(`/api/tasks/${id}`, values)
-      setTasks((s) => s.map((t) => (t.id === id ? res.data : t)))
-      setEditingId(null)
-    } catch (e) {
-      alert('Failed to update task')
-    }
-  }
+  };
 
   return (
-    <div className="max-w-3xl mx-auto mt-6">
-      <h2 className="text-2xl font-semibold mb-4">Tasks</h2>
-
-      {/* Summary */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-        <div className="p-4 border rounded">
-          <div className="text-sm text-muted-foreground">Total</div>
-          <div className="text-lg font-bold">{tasks.length}</div>
-        </div>
-        <div className="p-4 border rounded">
-          <div className="text-sm text-muted-foreground">Completed</div>
-          <div className="text-lg font-bold">{tasks.filter((t) => t.completed).length}</div>
-        </div>
-        <div className="p-4 border rounded">
-          <div className="text-sm text-muted-foreground">Pending</div>
-          <div className="text-lg font-bold">{tasks.filter((t) => !t.completed).length}</div>
-        </div>
-        <div className="p-4 border rounded">
-          <div className="text-sm text-muted-foreground">Overdue</div>
-          <div className="text-lg font-bold">{tasks.filter((t) => t.dueDate && new Date(t.dueDate) < new Date() && !t.completed).length}</div>
-        </div>
+    <div className="max-w-4xl mx-auto px-4 py-6">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-3xl font-bold">Tasks</h1>
+        <Button onClick={() => setIsCreating(true)} className="gap-2">
+          + New Task
+        </Button>
       </div>
 
-      <div className="flex items-center justify-between mb-4">
-        <div />
-        <div>
-          <Button onClick={() => setCreating(true)}>New Task</Button>
+      {error && (
+        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded text-red-700">
+          {error}
         </div>
-      </div>
+      )}
 
-      <div className="space-y-3">
-        {tasks.length === 0 && <p>No tasks yet</p>}
-        {tasks.map((task) => (
-          <Card key={task.id} className="p-3 flex items-start justify-between gap-3">
-            <div className="flex-1">
-              <div className="flex items-center gap-3">
-                <input type="checkbox" checked={task.completed} onChange={() => onToggleComplete(task)} />
-                <div>
-                  {editingId === task.id ? (
-                    <EditForm task={task} onCancel={cancelEdit} onSave={submitEdit} />
-                  ) : (
-                    <>
-                      <div className="font-medium">{task.title}</div>
-                      {task.description && <div className="text-sm text-gray-600">{task.description}</div>}
-                      {task.dueDate && <div className="text-xs text-gray-500">Due: {new Date(task.dueDate).toLocaleDateString()}</div>}
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-            <div className="flex gap-2">
-              {editingId !== task.id ? (
-                <>
-                  <button onClick={() => startEdit(task)} className="text-sm text-blue-600">Edit</button>
-                  <button onClick={() => onDelete(task.id)} className="text-sm text-red-600">Delete</button>
-                </>
-              ) : null}
-            </div>
-          </Card>
-        ))}
-      </div>
+      <TaskSummary summary={summary} />
 
-      {/* Create modal */}
-      <Modal open={creating} onClose={() => setCreating(false)} title="Create Task">
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-          <div>
-            <Label>Title</Label>
-            <Input {...register('title')} />
-            {formState.errors.title && <p className="text-sm text-red-600">{formState.errors.title.message}</p>}
+      <TaskControls
+        filterType={filterType}
+        sortType={sortType}
+        onFilterChange={setFilterType}
+        onSortChange={setSortType}
+      />
+
+      <TaskList
+        tasks={filteredAndSortedTasks}
+        onEdit={handleUpdateTask}
+        onDelete={handleDeleteTask}
+        onToggleComplete={handleToggleComplete}
+        isLoading={loading}
+      />
+
+      <Modal
+        open={isCreating}
+        onClose={() => {
+          setIsCreating(false);
+          setCreateError(null);
+        }}
+        title="Create New Task"
+      >
+        {createError && (
+          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
+            {createError}
           </div>
-          <div>
-            <Label>Description</Label>
-            <Input {...register('description')} />
-          </div>
-          <div className="flex gap-2">
-            <Input {...register('dueDate')} type="date" />
-            <Button type="submit">Create</Button>
-            <Button variant="outline" type="button" onClick={() => setCreating(false)}>Cancel</Button>
-          </div>
-        </form>
+        )}
+        <TaskForm onSubmit={handleCreateTask} onCancel={() => setIsCreating(false)} />
       </Modal>
     </div>
-  )
-}
-
-function EditForm({ task, onCancel, onSave }: { task: Task; onCancel: () => void; onSave: (id: string, data: FormData) => void }) {
-  const { register, handleSubmit, formState } = useForm<FormData>({ resolver: zodResolver(schema), defaultValues: { title: task.title, description: task.description ?? undefined, dueDate: task.dueDate ? task.dueDate.split('T')[0] : undefined } })
-
-  return (
-    <form onSubmit={handleSubmit((data) => onSave(task.id, data))} className="space-y-2">
-      <div>
-        <Input {...register('title')} />
-        {formState.errors.title && <p className="text-sm text-red-600">{formState.errors.title.message}</p>}
-      </div>
-      <div>
-        <Input {...register('description')} />
-      </div>
-      <div className="flex gap-2">
-        <Input {...register('dueDate')} type="date" />
-        <Button type="submit">Save</Button>
-        <Button variant="outline" type="button" onClick={onCancel}>Cancel</Button>
-      </div>
-    </form>
-  )
+  );
 }

@@ -4,6 +4,6 @@ import { useAuth } from '@/context/AuthContext'
 
 export default function RequireAuth({ children }: { children: React.ReactNode }) {
   const { token } = useAuth()
-  // if (!token) return <Navigate to="/login" replace />
+  if (!token) return <Navigate to="/login" replace />
   return <>{children}</>
 }
