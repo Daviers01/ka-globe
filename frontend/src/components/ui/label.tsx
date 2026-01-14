@@ -1,9 +1,23 @@
-import * as React from 'react'
-import { cn } from '@/lib/utils'
+import * as React from 'react';
+import { cn } from '@/lib/utils';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {}
 
-export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(({ className, ...props }, ref) => {
-  return <label ref={ref} className={cn('text-sm font-medium leading-none peer-disabled:cursor-not-allowed', className)} {...props} />
-})
-Label.displayName = 'Label'
+export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(
+  ({ className, ...props }, ref) => {
+    return (
+      // eslint-disable-next-line jsx-a11y/label-has-associated-control
+      <label
+        ref={ref}
+        className={cn(
+          'text-sm font-medium leading-none peer-disabled:cursor-not-allowed',
+          className,
+        )}
+        {...props}
+      />
+    );
+  },
+);
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+Label.displayName = 'Label';

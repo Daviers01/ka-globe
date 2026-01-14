@@ -11,7 +11,7 @@ export default function Home() {
         <div className="max-w-4xl mx-auto text-center space-y-8">
           <div className="space-y-4">
             <h1 className="text-5xl sm:text-6xl font-extrabold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-              Ka Globe
+              Ka-Globe Taskify
             </h1>
             <p className="text-xl sm:text-2xl text-gray-600">
               Modern task management for focused work
@@ -19,7 +19,8 @@ export default function Home() {
           </div>
 
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Stay organized with intuitive task tracking, due dates, and real-time updates. Built with modern web technologies for reliability and speed.
+            Stay organized with intuitive task tracking, due dates, and real-time updates. Built
+            with modern web technologies for reliability and speed.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -40,7 +41,7 @@ export default function Home() {
       {/* Features Section */}
       <section className="bg-white py-16 sm:py-24 px-4">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">Why Ka Globe?</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">Why Taskify?</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
             <Card className="p-6 border-l-4 border-l-blue-600 hover:shadow-lg transition-shadow">

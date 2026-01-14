@@ -13,24 +13,26 @@ interface NavBarProps {
 
 export const NavBar: React.FC<NavBarProps> = ({ isAuthenticated, onLogout }) => {
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 shadow-sm">
+    <nav className="sticky top-0 z-50 w-full border-b bg-white backdrop-blur supports-[backdrop-filter]:bg-white/80 shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <Link
             to="/"
-            className="flex items-center gap-2 text-xl font-bold text-blue-600 hover:text-blue-700 transition-colors"
+            className="flex items-center gap-3 group"
           >
-            <span className="inline-block w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white text-sm font-semibold">
-              KG
-            </span>
-            Ka Globe
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Globe_Telecom_logo.svg"
+              alt="Globe Logo"
+              className="w-20 h-20 object-contain drop-shadow-md transition-transform group-hover:scale-110"
+            />
+           
           </Link>
 
           <div className="flex items-center gap-4">
             {isAuthenticated && (
               <Link
                 to="/tasks"
-                className="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
+                className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
               >
                 Tasks
               </Link>
@@ -40,16 +42,16 @@ export const NavBar: React.FC<NavBarProps> = ({ isAuthenticated, onLogout }) => 
               {!isAuthenticated ? (
                 <>
                   <Link to="/login">
-                    <Button variant="ghost" size="sm">
+                    <Button variant="ghost" size="sm" className="hover:bg-blue-50">
                       Login
                     </Button>
                   </Link>
                   <Link to="/register">
-                    <Button size="sm">Register</Button>
+                    <Button size="sm" className="bg-blue-600 hover:bg-blue-700">Register</Button>
                   </Link>
                 </>
               ) : (
-                <Button variant="outline" size="sm" onClick={onLogout}>
+                <Button variant="outline" size="sm" onClick={onLogout} className="hover:bg-red-50 hover:text-red-600 hover:border-red-300">
                   Logout
                 </Button>
               )}

@@ -16,17 +16,11 @@ interface TaskItemProps {
   onToggleComplete: (task: Task) => Promise<void>;
 }
 
-export const TaskItem: React.FC<TaskItemProps> = ({
-  task,
-  onEdit,
-  onDelete,
-  onToggleComplete,
-}) => {
+export const TaskItem: React.FC<TaskItemProps> = ({ task, onEdit, onDelete, onToggleComplete }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
-    if (!confirm('Delete this task?')) return;
     setIsDeleting(true);
     try {
       await onDelete(task.id);
@@ -75,9 +69,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({
               </div>
 
               {task.description && (
-                <div className="text-sm text-gray-600 mt-1 break-words">
-                  {task.description}
-                </div>
+                <div className="text-sm text-gray-600 mt-1 break-words">{task.description}</div>
               )}
 
               {task.dueDate && (

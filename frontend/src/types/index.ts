@@ -14,6 +14,7 @@ export interface TaskInput {
   title: string;
   description?: string;
   dueDate?: string;
+  completed: boolean;
 }
 
 export interface AuthResponse {

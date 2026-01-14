@@ -4,10 +4,10 @@
 
 import React from 'react';
 import { Card } from '@/components/ui/card';
-import type { TaskSummary } from '@/types';
+import type { TaskSummary as TaskSummaryType } from '@/types';
 
 interface TaskSummaryProps {
-  summary: TaskSummary;
+  summary: TaskSummaryType;
 }
 
 interface SummaryCardProps {

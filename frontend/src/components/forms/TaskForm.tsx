@@ -16,6 +16,7 @@ const taskSchema = z.object({
   title: z.string().min(1, 'Title is required').max(255),
   description: z.string().optional().default(''),
   dueDate: z.string().optional().default(''),
+  completed: z.boolean().optional().default(false),
 });
 
 type TaskFormData = z.infer<typeof taskSchema>;
@@ -39,6 +40,7 @@ export const TaskForm: React.FC<TaskFormProps> = ({
       title: initialTask?.title || '',
       description: initialTask?.description || '',
       dueDate: getDateInputValue(initialTask?.dueDate),
+      completed: initialTask?.completed || false,
     },
   });
 
@@ -47,6 +49,7 @@ export const TaskForm: React.FC<TaskFormProps> = ({
       title: data.title,
       description: data.description || undefined,
       dueDate: data.dueDate || undefined,
+      completed: data.completed,
     });
   });
 
@@ -78,22 +81,25 @@ export const TaskForm: React.FC<TaskFormProps> = ({
 
       <div>
         <Label htmlFor="dueDate">Due Date (optional)</Label>
-        <Input
-          id="dueDate"
-          type="date"
-          {...register('dueDate')}
+        <Input id="dueDate" type="date" {...register('dueDate')} disabled={isLoading} />
+      </div>
+
+      <div className="flex items-center gap-2">
+        <input
+          id="completed"
+          type="checkbox"
+          {...register('completed')}
           disabled={isLoading}
+          className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
         />
+        <Label htmlFor="completed" className="cursor-pointer">
+          Mark as completed
+        </Label>
       </div>
 
       <div className="flex gap-2 justify-end">
         {onCancel && (
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onCancel}
-            disabled={isLoading}
-          >
+          <Button type="button" variant="outline" onClick={onCancel} disabled={isLoading}>
             Cancel
           </Button>
         )}

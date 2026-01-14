@@ -1,39 +1,42 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
-import api from '@/lib/api'
-import { useAuth } from '@/context/AuthContext'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Card, CardTitle, CardDescription } from '@/components/ui/card'
-import { Alert } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import api from '@/lib/api';
+import { useAuth } from '@/context/AuthContext';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardTitle, CardDescription } from '@/components/ui/card';
+import { Alert } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
 
 const schema = z.object({
   email: z.string().email('Invalid email'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
   name: z.string().optional(),
-})
+});
 
-type FormData = z.infer<typeof schema>
+type FormData = z.infer<typeof schema>;
 
 export default function Register() {
-  const { login } = useAuth()
-  const { register, handleSubmit, formState } = useForm<FormData>({ resolver: zodResolver(schema) })
-  const [serverError, setServerError] = React.useState<string | null>(null)
-  const [showPassword, setShowPassword] = React.useState(false)
+  const { login } = useAuth();
+  const { register, handleSubmit, formState } = useForm<FormData>({
+    resolver: zodResolver(schema),
+  });
+  const [serverError, setServerError] = React.useState<string | null>(null);
+  const [showPassword, setShowPassword] = React.useState(false);
 
   async function onSubmit(data: FormData) {
-    setServerError(null)
+    setServerError(null);
     try {
-      const res = await api.post('/api/auth/register', data)
-      const token = res.data?.token
-      if (token) login(token)
-    } catch (e: any) {
-      console.error(e)
-      setServerError(e?.response?.data?.error || 'Register failed')
+      const res = await api.post('/api/auth/register', data);
+      const token = res.data?.token;
+      if (token) login(token);
+    } catch (e: unknown) {
+      console.error(e);
+      const message = e instanceof Error ? e.message : 'Register failed';
+      setServerError(message);
     }
   }
 
@@ -54,16 +57,31 @@ export default function Register() {
           <div>
             <Label htmlFor="email">Email</Label>
             <Input id="email" {...register('email')} aria-invalid={!!formState.errors.email} />
-            {formState.errors.email && <p className="text-sm text-red-600">{formState.errors.email.message}</p>}
+            {formState.errors.email && (
+              <p className="text-sm text-red-600">{formState.errors.email.message}</p>
+            )}
           </div>
 
           <div>
             <Label htmlFor="password">Password</Label>
             <div className="relative">
-              <Input id="password" {...register('password')} type={showPassword ? 'text' : 'password'} aria-invalid={!!formState.errors.password} />
-              <button type="button" onClick={() => setShowPassword((s) => !s)} className="absolute right-2 top-2 text-sm text-gray-600">{showPassword ? 'Hide' : 'Show'}</button>
+              <Input
+                id="password"
+                {...register('password')}
+                type={showPassword ? 'text' : 'password'}
+                aria-invalid={!!formState.errors.password}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((s) => !s)}
+                className="absolute right-2 top-2 text-sm text-gray-600"
+              >
+                {showPassword ? 'Hide' : 'Show'}
+              </button>
             </div>
-            {formState.errors.password && <p className="text-sm text-red-600">{formState.errors.password.message}</p>}
+            {formState.errors.password && (
+              <p className="text-sm text-red-600">{formState.errors.password.message}</p>
+            )}
           </div>
 
           <div>
@@ -74,9 +92,12 @@ export default function Register() {
         </form>
 
         <p className="text-sm text-center text-muted-foreground mt-4">
-          Already have an account? <Link to="/login" className="text-blue-600">Sign in</Link>
+          Already have an account?{' '}
+          <Link to="/login" className="text-blue-600">
+            Sign in
+          </Link>
         </p>
       </Card>
     </div>
-  )
+  );
 }

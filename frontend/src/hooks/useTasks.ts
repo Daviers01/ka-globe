@@ -21,8 +21,9 @@ export function useTasks() {
     try {
       const data = await taskService.fetchTasks();
       setTasks(data);
-    } catch (err: any) {
-      setError(err?.response?.data?.error || 'Failed to fetch tasks');
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch tasks';
+      setError(errorMessage);
       console.error('Failed to fetch tasks', err);
     } finally {
       setLoading(false);
@@ -34,20 +35,23 @@ export function useTasks() {
       const newTask = await taskService.createTask(input);
       setTasks((prev) => [newTask, ...prev]);
       return newTask;
-    } catch (err: any) {
-      const message = err?.response?.data?.error || 'Failed to create task';
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to create task';
       setError(message);
       throw new Error(message);
     }
   }
 
-  async function updateTask(id: string, data: Partial<TaskInput> & { completed?: boolean }): Promise<Task | null> {
+  async function updateTask(
+    id: string,
+    data: Partial<TaskInput> & { completed?: boolean },
+  ): Promise<Task | null> {
     try {
       const updated = await taskService.updateTask(id, data);
       setTasks((prev) => prev.map((t) => (t.id === id ? updated : t)));
       return updated;
-    } catch (err: any) {
-      const message = err?.response?.data?.error || 'Failed to update task';
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to update task';
       setError(message);
       throw new Error(message);
     }
@@ -57,8 +61,8 @@ export function useTasks() {
     try {
       await taskService.deleteTask(id);
       setTasks((prev) => prev.filter((t) => t.id !== id));
-    } catch (err: any) {
-      const message = err?.response?.data?.error || 'Failed to delete task';
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to delete task';
       setError(message);
       throw new Error(message);
     }

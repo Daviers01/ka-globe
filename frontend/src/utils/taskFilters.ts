@@ -65,7 +65,7 @@ export function sortTasks(tasks: Task[], sortType: TaskSortType): Task[] {
 export function filterAndSortTasks(
   tasks: Task[],
   filterType: TaskFilterType,
-  sortType: TaskSortType
+  sortType: TaskSortType,
 ): Task[] {
   const filtered = filterTasks(tasks, filterType);
   return sortTasks(filtered, sortType);

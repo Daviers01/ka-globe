@@ -1,17 +1,21 @@
-import * as React from 'react'
-import { cn } from '@/lib/utils'
+import * as React from 'react';
+import { cn } from '@/lib/utils';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(({ className, ...props }, ref) => {
   return (
     <input
       ref={ref}
-      className={cn('flex h-10 w-full rounded-md border px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:font-medium placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50', className)}
+      className={cn(
+        'flex h-10 w-full rounded-md border px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:font-medium placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
+        className,
+      )}
       {...props}
     />
-  )
-})
-Input.displayName = 'Input'
+  );
+});
+Input.displayName = 'Input';
 
-export { Input }
+export { Input };

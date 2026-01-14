@@ -35,7 +35,7 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
       <div
         className={cn(
           'relative z-10 w-full max-w-md rounded-lg bg-white p-6 shadow-xl',
-          'animate-in slide-in-from-bottom-4 duration-300'
+          'animate-in slide-in-from-bottom-4 duration-300',
         )}
         role="dialog"
         aria-modal="true"
