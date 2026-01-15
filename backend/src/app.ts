@@ -6,7 +6,11 @@ import taskRoutes from './routes/tasks'
 
 const app = express()
 
-app.use(cors())
+app.use(cors({
+  origin: '*',
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+}))
 app.use(express.json())
 app.use(morgan('dev'))
 

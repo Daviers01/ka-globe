@@ -9,7 +9,6 @@ export default defineConfig({
     seed: 'npm run seed',
   },
   datasource: {
-    // Use process.env here so `prisma generate` doesn't fail when DATABASE_URL isn't set
     url: process.env.DATABASE_URL ?? '',
   },
 });
