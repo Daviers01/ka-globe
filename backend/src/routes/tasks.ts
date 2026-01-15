@@ -4,7 +4,7 @@ import { createTask, getTasks, getTask, updateTask, deleteTask } from '../contro
 
 const router = Router()
 
-router.use(requireAuth)
+// router.use(requireAuth)
 
 router.get('/', getTasks)
 router.post('/', createTask)
